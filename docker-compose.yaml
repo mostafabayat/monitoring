@@ -1,0 +1,51 @@
+version: '3'
+
+services:
+  grafana:
+    image: grafana/grafana:9.3.2
+    container_name: grafana
+    user: root
+    network_mode: host
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_USERS_ALLOW_SIGN_UP=false
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+  prometheus:
+    image: prom/prometheus:v2.40.7
+    container_name: prometheus
+    user: root
+    network_mode: host
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=240h'
+      - '--web.enable-lifecycle'
+    restart: unless-stopped
+    ports:
+      - 9090:9090
+  alertmanager:
+    image: prom/alertmanager:v0.24.0
+    container_name: alertmanager
+    user: root
+    volumes:
+      - ./alertmanager:/etc/alertmanager
+      - alertmanager_date:/alertmanager
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+      - '--storage.path=/alertmanager'
+    restart: unless-stopped
+    ports:
+      - 9093:9093
+
+volumes:
+    prometheus_data: {}
+    grafana_data: {}
+    alertmanager_date: {}
