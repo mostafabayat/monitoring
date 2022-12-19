@@ -50,7 +50,7 @@ services:
       - 9093:9093
 
 networks:
-  - monitoring : {}
+  monitoring: {}
 
 volumes:
   prometheus_data: {}
