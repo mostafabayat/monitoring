@@ -41,7 +41,7 @@ services:
     networks:
       - monitoring
     volumes:
-      - ./alertmanager:/etc/alertmanager
+      - ./alertmanager.yaml:/etc/alertmanager/alertmanager.yml
       - alertmanager_date:/alertmanager
     command:
       - '--config.file=/etc/alertmanager/alertmanager.yml'
