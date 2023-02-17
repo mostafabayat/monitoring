@@ -52,15 +52,15 @@ services:
     image: prom/node-exporter:v1.5.0
     container_name: node_exporter
     command:
+      - '--web.listen-address=localhost:9101'
       - '--path.rootfs=/host'
       - '--collector.systemd'
       - '--collector.processes'
+    network_mode: host
     pid: host
     restart: unless-stopped
     volumes:
       - '/:/host:ro,rslave'
-    ports:
-      - 172.17.0.1:9100:9100
 
 networks:
   monitoring: {}
